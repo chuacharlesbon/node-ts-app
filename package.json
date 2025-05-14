@@ -5,7 +5,8 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "nodemon src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "prod": "npm run build && node dist/index.js"
   },
   "keywords": [],
   "author": "",
