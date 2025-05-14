@@ -19,7 +19,6 @@ const myController2 = async (req: Request, res: Response) => {
             errorData: err
         });
     }
-    res.status(200).json({ message: "Connected to my controller 1" });
 };
 
 const MyController = {
