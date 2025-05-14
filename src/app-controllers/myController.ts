@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import pool from '../config/db';
 
-const myController1 = (req: Request, res: Response): void => {
+export const myController1 = (req: Request, res: Response): void => {
     console.log("My controller req.method", req.method);
     res.status(200).json({ message: "Connected to my controller 1" });
 };
 
-const myController2 = async (req: Request, res: Response) => {
+export const myController2 = async (req: Request, res: Response) => {
     console.log("My controller req.method", req.method);
 
     try {
@@ -20,10 +20,3 @@ const myController2 = async (req: Request, res: Response) => {
         });
     }
 };
-
-const MyController = {
-    myController1,
-    myController2,
-};
-
-export default MyController;
