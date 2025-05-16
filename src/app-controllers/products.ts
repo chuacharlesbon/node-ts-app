@@ -1,13 +1,30 @@
 import { Request, Response } from 'express';
 import pool from '../config/db';
 import { OkPacket, QueryResult, ResultSetHeader } from 'mysql2';
+import crypto from 'crypto';
 
 export const getAllProducts = async (req: Request, res: Response) => {
     try {
-        const [rows] = await pool.query('SELECT * FROM products WHERE (is_deleted IS NULL OR is_deleted != 1)');
-        // const [rows] = await pool.query('SELECT * FROM products');
-        res.json({
-            data: rows,
+        const [rows] = await pool.query('SELECT * FROM products WHERE is_deleted IS NULL OR is_deleted != 1');
+
+        // Create ETag from the response body
+        const dataString = JSON.stringify(rows);
+        const etag = crypto.createHash('md5').update(dataString).digest('hex');
+
+        const clientETag = req.headers['if-none-match'];
+
+        if (clientETag === `"${etag}"`) {
+            res.status(304).end(); // Not Modified
+            return;
+        }
+
+        // Set headers for caching
+        res.setHeader('ETag', `"${etag}"`);
+        res.setHeader('Cache-Control', 'public, max-age=60'); // 1 minute cache
+
+        res.status(200).json({
+            fromCache: false,
+            data: rows
         });
     } catch (err) {
         res.status(500).json({
