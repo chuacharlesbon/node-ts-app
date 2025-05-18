@@ -83,3 +83,50 @@ export const getImageById = async (req: Request, res: Response) => {
         });
     }
 };
+
+// My Cloudflare worker R2 Image Caching
+
+/**
+ * Welcome to Cloudflare Workers! This is your first worker.
+ *
+ * - Run "npm run dev" in your terminal to start a development server
+ * - Open a browser tab at http://localhost:8787/ to see your worker in action
+ * - Run "npm run deploy" to publish your worker
+ *
+ * Learn more at https://developers.cloudflare.com/workers/
+ */
+
+
+// export default {
+//     async fetch(request, env, ctx) {
+//       try {
+//         const url = new URL(request.url);
+//         const imageId = url.pathname.split("/").pop();
+  
+//         // Get object from R2
+//         const object = await env.IMG_BUCKET.get(imageId);
+  
+//         if (!object || !object.body) {
+//           return new Response("Image not found", { status: 404 });
+//         }
+  
+//         const etag = `"${object.httpEtag}"`;
+//         const clientETag = request.headers.get("If-None-Match");
+  
+//         if (clientETag === etag) {
+//           return new Response(null, { status: 304 });
+//         }
+  
+//         return new Response(object.body, {
+//           headers: {
+//             "Content-Type": object.httpMetadata?.contentType || "image/jpeg",
+//             "Cache-Control": "public, max-age=604800", // Cache for 1 day
+//             "ETag": etag,
+//           },
+//         });
+//       } catch (e) {
+//         return new Response("Image not found", { status: 404 });
+//       }
+//     },
+//   };
+  
