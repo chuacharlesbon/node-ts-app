@@ -5,6 +5,17 @@ import crypto from 'crypto';
 
 export const getAllProducts = async (req: Request, res: Response) => {
     try {
+        console.log("This is the token", req.cookies);
+
+        // Set cookie
+        const sampleCookie = 'sample_cookie';
+        res.cookie('_sampleCookie', sampleCookie, {
+            httpOnly: true,      // prevent access from JS (XSS protection)
+            secure: false,        // HTTPS only
+            sameSite: 'lax',     // CSRF protection (can be 'Strict', 'None' too)
+            maxAge: 3600000      // 1 hour in milliseconds
+        });
+
         const [rows] = await pool.query('SELECT * FROM products WHERE is_deleted IS NULL OR is_deleted != 1');
 
         // Create ETag from the response body
