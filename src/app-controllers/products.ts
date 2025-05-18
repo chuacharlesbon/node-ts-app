@@ -15,6 +15,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
             sameSite: 'lax',     // CSRF protection (can be 'Strict', 'None' too)
             maxAge: 3600000      // 1 hour in milliseconds
         });
+        // res.clearCookie('_sampleCookie');
 
         const [rows] = await pool.query('SELECT * FROM products WHERE is_deleted IS NULL OR is_deleted != 1');
 
