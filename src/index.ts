@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { PORT } from './config/config';
 import productRouter from './app-routes/products';
 import cookieParser from 'cookie-parser';
+import imageRouter from './app-routes/images';
 
 dotenv.config();
 const app = express();
@@ -26,5 +27,6 @@ app.use(cookieParser());
 app.use('/my-route', myRouter);
 app.use('/products', productRouter);
 // app.use('/products', etagCache, productRouter);
+app.use('/images', imageRouter);
 
 app.listen(port, () => console.log (`Server is now running at port ${port}`))
