@@ -19,7 +19,10 @@ const port = PORT ?? 4000;
 // MONGODB                //
 ////////////////////////////
 const mongoDbUri = MONGODB_URI_S1;
-mongoose.connect(mongoDbUri.toString());
+mongoose.connect(mongoDbUri.toString())
+.catch(err => {
+  console.error("ERR: Initial MongoDB connection error:", err.message);
+});;
 
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Connection Error'));
