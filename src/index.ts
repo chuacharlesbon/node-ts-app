@@ -44,7 +44,12 @@ app.use('/my-route', myRouter);
 app.use('/products', productRouter);
 // app.use('/products', etagCache, productRouter);
 app.use('/images', imageRouter);
-app.use('/mongodb', MongodbRoute)
+app.use('/mongodb', MongodbRoute);
+
+// Default route
+app.get("/", (req, res) => {
+  res.status(200).send("Node App is on 🚀");
+});
 
 //////////////////////////////////////
 // Implement
