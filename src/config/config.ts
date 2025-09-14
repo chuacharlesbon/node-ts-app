@@ -10,3 +10,4 @@ export const MONGODB_URI_S1 = process.env.MONGODB_URI_S1 ?? 'N/A';
 export const DEV_MODE = process.env.DEV_MODE ?? 'N/A';
 export const DEV_WEB_URL = process.env.DEV_WEB_URL ?? 'N/A';
 export const PROD_WEB_URL = process.env.PROD_WEB_URL ?? 'N/A';
+export const JWT_SECRET = process.env.JWT_SECRET ?? 'N/A';

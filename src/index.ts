@@ -10,6 +10,7 @@ import mongoose from 'mongoose';
 import MongodbRoute from './app-routes/mongodb/ping';
 import http from "http";
 import { Server } from "socket.io";
+import chatUserRouter from './app-routes/chat/userRoutes';
 
 dotenv.config();
 const app = express();
@@ -48,6 +49,11 @@ app.use('/products', productRouter);
 // app.use('/products', etagCache, productRouter);
 app.use('/images', imageRouter);
 app.use('/mongodb', MongodbRoute);
+
+////////////////////////////
+// CHAT APP ROUTES        //
+////////////////////////////
+app.use('/chat', chatUserRouter);
 
 // Default route
 app.get("/", (req, res) => {
