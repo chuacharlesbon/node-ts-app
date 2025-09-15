@@ -33,13 +33,14 @@ db.once('open', () => console.log('Connected to MongoDB'));
 // APP SETUP              //
 ////////////////////////////
 app.use(cors({
-  origin: DEV_MODE ? DEV_WEB_URL : PROD_WEB_URL,   // Allow this origin only
+  origin: [DEV_WEB_URL, PROD_WEB_URL],   // Allow this origin only
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed HTTP methods
   credentials: true                  // Allow cookies/auth headers if needed
 }));
 
 app.use(express.json());
 app.use(cookieParser());
+app.set("trust proxy", 1);
 
 ////////////////////////////
 // ROUTES                 //
@@ -68,7 +69,9 @@ const server = http.createServer(app);
 const io = new Server(server, {
   path: "/socket-route", // optional custom path
   cors: {
-    origin: "*", // DEV_MODE ? DEV_WEB_URL : PROD_WEB_URL,
+    origin: [DEV_WEB_URL, PROD_WEB_URL],
+    methods: ["GET", "POST"],
+    credentials: true
   },
 });
 
