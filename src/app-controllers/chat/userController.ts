@@ -111,3 +111,37 @@ export const getAllUsersCtrl = async (req: Request, res: Response): Promise<void
         return;
     }
 };
+
+export const getProfileCtrl = async (req: Request, res: Response): Promise<void> => {
+    try {
+        print("getProfileCtrl");
+        const user = req.user;
+
+        if (!user) {
+            res.status(400).json({
+                message: `Error: Cannot find user.`,
+            });
+            return;
+        } else {
+            const currentUser = await UserModel.findOne({ email: user.user?.email ?? "N/A" });
+            if (!currentUser) {
+                res.status(400).json({
+                    message: `Error: Cannot find user.`,
+                });
+                return;
+            } else {
+                const newUser = toUser(currentUser?.toObject());
+                res.status(200).json({
+                    data: newUser,
+                    message: "User Profile",
+                });
+                return;
+            }
+        }
+    } catch (e) {
+        res.status(400).json({
+            message: `Error: Something went wrong. ${e}`,
+        });
+        return;
+    }
+};
