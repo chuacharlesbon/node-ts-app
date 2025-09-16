@@ -34,14 +34,15 @@ export const getChatsCtrl = async (req: Request, res: Response): Promise<void> =
     try {
         print("getChatsCtrl");
         const user = req.user;
-        if (!user) {
+        const threadKeyEmail = req.params?.id;
+        if (!user || !threadKeyEmail) {
             res.status(400).json({
                 message: "No user data.",
             });
             return;
         }else{
             const userList = await ChatModel.find({
-                threadKey: user.user?.email
+                threadKey: { $all: [user.user?.email, threadKeyEmail] }
             });
             res.status(200).json({
                 message: "Chat list",

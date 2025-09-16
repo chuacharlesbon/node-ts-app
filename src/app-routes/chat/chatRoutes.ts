@@ -5,6 +5,6 @@ import { addChatCtrl, getChatsCtrl } from '../../app-controllers/chat/chatContro
 const chatThreadRouter = express.Router();
 
 chatThreadRouter.post('/create-chat', verify, addChatCtrl);
-chatThreadRouter.get('/chats', verify, getChatsCtrl);
+chatThreadRouter.get('/chats/:id', verify, getChatsCtrl);
 
 export default chatThreadRouter;
