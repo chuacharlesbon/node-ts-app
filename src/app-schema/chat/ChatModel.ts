@@ -24,7 +24,7 @@ const chatModelSchema = new mongoose.Schema({
         },
     },
     threadKey: {
-        type: String,
+        type: [String],
         required: [true, "Thread key is required"],
     },
     message: {

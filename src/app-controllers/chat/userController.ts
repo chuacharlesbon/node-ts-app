@@ -49,7 +49,7 @@ export const loginCtrl = async (req: Request, res: Response): Promise<void> => {
                     { new: true, projection: { password: 0 } } // 0 means exclude
                 );
 
-                const newUser = toUser(user);
+                const newUser = toUser(user?.toObject());
                 newUser.key = "access";
 
                 // Set cookie
@@ -57,13 +57,13 @@ export const loginCtrl = async (req: Request, res: Response): Promise<void> => {
                 newUser.key = "refresh";
                 const refreshToken = authGenerateUserToken(newUser, 604800); // 7 days
 
-                res.cookie('access_token', accessToken, {
+                res.cookie('access_token', `Bearer ${accessToken}`, {
                     httpOnly: true,
                     secure: !DEV_MODE,
                     sameSite: !DEV_MODE ? 'none' : 'lax',
                     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
                 });
-                res.cookie('refresh_token', refreshToken, {
+                res.cookie('refresh_token', `Bearer ${refreshToken}`, {
                     httpOnly: true,
                     secure: !DEV_MODE,
                     sameSite: !DEV_MODE ? 'none' : 'lax',
@@ -87,6 +87,23 @@ export const loginCtrl = async (req: Request, res: Response): Promise<void> => {
             });
             return;
         }
+    } catch (e) {
+        res.status(400).json({
+            message: `Error: Something went wrong. ${e}`,
+        });
+        return;
+    }
+};
+
+export const getAllUsersCtrl = async (req: Request, res: Response): Promise<void> => {
+    try {
+        print("getAllUsersCtrl");
+        const userList = await UserModel.find();
+        res.status(200).json({
+            message: "User List",
+            data: userList
+        });
+        return;
     } catch (e) {
         res.status(400).json({
             message: `Error: Something went wrong. ${e}`,

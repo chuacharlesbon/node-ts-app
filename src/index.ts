@@ -11,6 +11,7 @@ import MongodbRoute from './app-routes/mongodb/ping';
 import http from "http";
 import { Server } from "socket.io";
 import chatUserRouter from './app-routes/chat/userRoutes';
+import chatThreadRouter from './app-routes/chat/chatRoutes';
 
 dotenv.config();
 const app = express();
@@ -55,6 +56,7 @@ app.use('/mongodb', MongodbRoute);
 // CHAT APP ROUTES        //
 ////////////////////////////
 app.use('/chat', chatUserRouter);
+app.use('/chat-thread', chatThreadRouter);
 
 // Default route
 app.get("/", (req, res) => {
