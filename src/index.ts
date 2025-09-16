@@ -83,37 +83,19 @@ const users = new Map(); // better than {}
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
-  // Flutter -> Node (listen to events)
-  socket.on("client-message", (data) => {
-    console.log("📩 From Flutter:", data);
-
-    // Send acknowledgement
-    socket.emit("server-ack", { status: "received", echo: data });
-  });
-
-  // Example: Node -> Flutter (broadcast)
-  socket.on("join-room", (roomId) => {
-    socket.join(roomId);
-    console.log(`User ${socket.id} joined room ${roomId}`);
-
-    // Notify only users in that room
-    io.to(roomId).emit("room-notice", {
-      message: `User ${socket.id} joined room ${roomId}`,
-    });
-  });
-
   // Store userId when a user joins
   socket.on("register", (userId) => {
     // users[userId] = socket.id;  // Map userId to socket.id
     users.set(userId, socket.id);
     console.log(`User ${userId} registered with socket ID ${socket.id}`);
+    console.log("All users", users);
   });
 
   // Send message to a specific user
-  socket.on("private-message", ({ recipientId, message }) => {
+  socket.on("private-message", ({ senderId, recipientId, message }) => {
     const recipientSocketId = users.get(recipientId); // Get socket ID of the recipient
     if (recipientSocketId) {
-      io.to(recipientSocketId).emit("message", { senderId: socket.id, message });
+      io.to(recipientSocketId).emit("private-message", { senderId, recipientId, message });
       console.log(`Sent message to user ${recipientId}: ${message}`);
     } else {
       console.log(`User ${recipientId} is not online.`);
@@ -122,25 +104,12 @@ io.on("connection", (socket) => {
 
   // Handle disconnection
   socket.on("disconnect", () => {
-    // Remove the user from the mapping
-    // for (let userId in users) {
-    //     if (users[userId] === socket.id) {
-    //         console.log(`User ${userId} disconnected from socket`);
-    //         delete users[userId];
-    //         break;
-    //     }
-    // }
     for (const [userId, id] of users) {
       if (id === socket.id) {
         users.delete(userId);
         break;
       }
     }
-  });
-
-  socket.on("msg", (data) => {
-    console.log("Message from client:", data);
-    socket.emit("fromServer", "Hello from Node.js server");
   });
 });
 
