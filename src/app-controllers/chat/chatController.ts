@@ -57,3 +57,31 @@ export const getChatsCtrl = async (req: Request, res: Response): Promise<void> =
         return;
     }
 };
+
+export const getLatestChatCtrl = async (req: Request, res: Response): Promise<void> => {
+    try {
+        print("getLatestChatCtrl");
+        const user = req.user;
+        const threadKeyEmail = req.params?.id;
+        if (!user || !threadKeyEmail) {
+            res.status(400).json({
+                message: "No user data.",
+            });
+            return;
+        }else{
+            const latestChat = await ChatModel.findOne({
+                threadKey: { $all: [user.user?.email, threadKeyEmail] }
+            }).sort({ createdAt: -1 });
+            res.status(200).json({
+                message: "Chat latest",
+                data: latestChat
+            });
+            return;
+        }
+    } catch (e) {
+        res.status(400).json({
+            message: `Error: Something went wrong. ${e}`,
+        });
+        return;
+    }
+};
