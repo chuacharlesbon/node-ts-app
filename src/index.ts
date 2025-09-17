@@ -2,10 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import myRouter from './app-routes/myRoute';
 import dotenv from 'dotenv';
-import { DEV_MODE, DEV_WEB_URL, MONGODB_URI_S1, PORT, PROD_WEB_URL } from './config/config';
-import productRouter from './app-routes/products';
+import { DEV_WEB_URL, MONGODB_URI_S1, PORT, PROD_WEB_URL } from './config/config';
 import cookieParser from 'cookie-parser';
-import imageRouter from './app-routes/images';
 import mongoose from 'mongoose';
 import MongodbRoute from './app-routes/mongodb/ping';
 import http from "http";
@@ -47,9 +45,6 @@ app.set("trust proxy", 1);
 // ROUTES                 //
 ////////////////////////////
 app.use('/my-route', myRouter);
-app.use('/products', productRouter);
-// app.use('/products', etagCache, productRouter);
-app.use('/images', imageRouter);
 app.use('/mongodb', MongodbRoute);
 
 ////////////////////////////
@@ -77,8 +72,7 @@ const io = new Server(server, {
   },
 });
 
-const users = new Map(); // better than {}
-// const users = {}; // Store userId -> socket.id mapping
+const users = new Map();
 
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
