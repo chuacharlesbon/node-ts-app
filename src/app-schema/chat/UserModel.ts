@@ -47,6 +47,9 @@ const userModelSchema = new mongoose.Schema({
     loginAt: {
         type: Date,
     },
+    logoutAt: {
+        type: Date,
+    },
 });
 
 // Attach timestamps automatically

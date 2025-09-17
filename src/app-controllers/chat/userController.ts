@@ -156,3 +156,52 @@ export const getProfileCtrl = async (req: Request, res: Response): Promise<void>
         return;
     }
 };
+
+export const logoutCtrl = async (req: Request, res: Response): Promise<void> => {
+    try {
+        print("logoutCtrl");
+        const user = req.user;
+
+        if (!user) {
+            res.status(400).json({
+                message: `Error: Cannot find user.`,
+            });
+            return;
+        } else {
+            const currentUser = await UserModel.findOneAndUpdate(
+                { email: user.user?.email ?? "N/A" },
+                { logoutAt: new Date() },
+                { new: true, projection: { password: 0 } } // 0 means exclude
+            );
+
+            res.cookie('access_token', "Bearer empty", {
+                httpOnly: true,
+                secure: !DEV_MODE,
+                sameSite: !DEV_MODE ? 'none' : 'lax',
+                maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+            });
+            res.cookie('refresh_token', "Bearer empty", {
+                httpOnly: true,
+                secure: !DEV_MODE,
+                sameSite: !DEV_MODE ? 'none' : 'lax',
+                maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+            });
+            if (!currentUser) {
+                res.status(400).json({
+                    message: `Error: Cannot find user.`,
+                });
+                return;
+            } else {
+                res.status(200).json({
+                    message: "User logged out",
+                });
+                return;
+            }
+        }
+    } catch (e) {
+        res.status(400).json({
+            message: `Error: Something went wrong. ${e}`,
+        });
+        return;
+    }
+};

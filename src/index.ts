@@ -33,7 +33,7 @@ db.once('open', () => console.log('Connected to MongoDB'));
 ////////////////////////////
 app.use(cors({
   origin: [DEV_WEB_URL, PROD_WEB_URL],   // Allow this origin only
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed HTTP methods
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"], // Allowed HTTP methods
   credentials: true                  // Allow cookies/auth headers if needed
 }));
 
