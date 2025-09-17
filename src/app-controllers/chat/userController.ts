@@ -98,12 +98,23 @@ export const loginCtrl = async (req: Request, res: Response): Promise<void> => {
 export const getAllUsersCtrl = async (req: Request, res: Response): Promise<void> => {
     try {
         print("getAllUsersCtrl");
-        const userList = await UserModel.find();
-        res.status(200).json({
-            message: "User List",
-            data: userList
-        });
-        return;
+        const user = req.user;
+
+        if (!user) {
+            res.status(400).json({
+                message: `Error: Cannot find user.`,
+            });
+            return;
+        } else {
+            const userList = await UserModel.find({
+                email: { $ne: user?.user?.email ?? "N/A" }
+            });
+            res.status(200).json({
+                message: "User List",
+                data: userList
+            });
+            return;
+        }
     } catch (e) {
         res.status(400).json({
             message: `Error: Something went wrong. ${e}`,
