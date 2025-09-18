@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import { myController1, myController2 } from "../app-controllers/myController";
+import { myController1, myController2, myController3 } from "../app-controllers/myController";
 
 const myRouter: Router = express.Router();
 // const myController = require("../controllers/myController");
@@ -11,5 +11,6 @@ myRouter.get("/ping", (req, res) => {
 
 myRouter.get("/controller-1", myController1);
 myRouter.get("/controller-2", myController2);
+myRouter.post("/controller-3", myController3);
 
 export default myRouter;
